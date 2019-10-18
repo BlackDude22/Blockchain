@@ -53,3 +53,17 @@ Transakciją sudaro:
 Transakcijos hash gaunamas sudėjus visas šias reikšmes į vieną string ir suskaičiavus jos hash.
 
 Transakcija nėra laikoma įvykusia, kol ji nėra patalpinta į blokų grandinę.
+
+### Vartotojų baseinas
+
+Vartotojų baseine laikomi visi sistemos vartotojai.
+
+### Vartotojas
+
+Vartotojo profilį sudaro:
+
+* `Name`.
+* `Public Key`.
+* `Balance`. 
+
+Vartotojų balansas keičiamas tada, kai patvirtinama transakcija.

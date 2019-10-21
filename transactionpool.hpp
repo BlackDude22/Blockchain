@@ -37,6 +37,11 @@ class TransactionPool{
             transactionPool.erase(transactionKey);
         }
 
+        void removeTransactionVector(std::vector<Transaction> transactionVector){
+            for (Transaction t : transactionVector)
+                transactionPool.erase(t.getHash());
+        }
+
         bool contains(std::string transactionKey){
             if (transactionPool.count(transactionKey) == 0)
                 return false;

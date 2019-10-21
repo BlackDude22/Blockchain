@@ -25,12 +25,12 @@ class Block{
             previousBlockHash = pbh;
             version = "1.0";
         }
+
+        Block(){}
         
-        void mine(){
+        void mine(bool &continueMining){
             TransactionPool& tp = TransactionPool::getInstance();
             insertValidTransactions();
-            // for (int i = 0; i < BLOCK_TRANSACTION_COUNT; i++)
-            //     transactions.push_back(tp.getTransaction());
             while(true){
                 merkleRootHash = calculateMerkleRoot(transactions);
                 for(nonce = 0; nonce < MAX_NONCE; nonce++){
@@ -41,6 +41,8 @@ class Block{
                         difficultyTarget = DIFFICULTY_TARGET;
                         return;
                     }
+                    if (!continueMining)
+                        return;
                 }
                 std::next_permutation(transactions.begin(), transactions.end());
             }
@@ -81,6 +83,17 @@ class Block{
         void setTimeStamp(){
             std::time_t ticks = std::time(nullptr);
             timeStamp = std::asctime(std::localtime(&ticks)); 
+        }
+
+        void operator=(Block right){
+            currentBlockHash = right.currentBlockHash;
+            previousBlockHash = right.previousBlockHash;
+            timeStamp = right.timeStamp;
+            version = right.version;
+            merkleRootHash = right.merkleRootHash;
+            nonce = right.nonce;
+            difficultyTarget = right.difficultyTarget;
+            transactions = right.transactions;
         }
 
     private:

@@ -90,18 +90,25 @@ class Block{
 
             std::map<std::string, User> userMap;
             while(transactions.size() < BLOCK_TRANSACTION_COUNT){
-                Transaction t = tp.getTransaction();
+                Transaction t = tp.getRandomTransaction();
+                bool skip = false;
+                for (Transaction tt : transactions)
+                    if (tt == t){
+                        skip = true;
+                        break;
+                    }
+                if (skip)
+                    continue;
                 std::string spk = t.getSenderPublicKey();
                 std::string rpk = t.getRecieverPublicKey();
                 userMap.emplace(spk, u.getUser(spk));
                 userMap.emplace(rpk, u.getUser(rpk));
-                if (!userMap.at(spk).changeBalance(-t.getInput()) || !userMap.at(rpk).changeBalance(-t.getOutput())){
-                    userMap.erase(spk);
-                    userMap.erase(rpk);
-                    tp.returnTransaction(t);
-                } else {
+                if (!userMap.at(spk).changeBalance(-t.getInput()))
+                    continue;
+                else if (!userMap.at(rpk).changeBalance(-t.getOutput()))
+                    userMap.at(spk).changeBalance(t.getInput());
+                else 
                     transactions.push_back(t);
-                }
             }
         }
 };

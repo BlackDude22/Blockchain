@@ -1,13 +1,13 @@
 #ifndef TRANSACTION_POOL_H
 #define TRANSACTION_POOL_H
 
-#include <deque>
+#include <map>
+#include <stdlib.h>
 #include "transaction.hpp"
 
 class TransactionPool{
     private:
-        std::deque<Transaction> transactionPool;
-
+        std::map<std::string, Transaction> transactionPool;
         TransactionPool(){
             
         }
@@ -18,21 +18,29 @@ class TransactionPool{
         }
 
         void addNewTransaction(std::string spk, double in, std::string rpk, double out){
-            transactionPool.emplace_back(spk, in, rpk, out);
-        }
-        
-        Transaction getTransaction(){
-            Transaction result = transactionPool.at(0);
-            transactionPool.pop_front();
-            return result;
-        }
-        
-        void returnTransaction(Transaction t){
-            transactionPool.push_back(t);
+            Transaction t(spk, in, rpk, out);
+            transactionPool.emplace(t.getHash(), t);
         }
         
         size_t size(){
             return transactionPool.size();
+        }
+
+        Transaction getRandomTransaction(){
+            size_t randomIndex = rand()%size();
+            auto iter = transactionPool.begin();
+            std::advance(iter, randomIndex);
+            return iter->second;
+        }
+
+        void removeTransaction(std::string transactionKey){
+            transactionPool.erase(transactionKey);
+        }
+
+        bool contains(std::string transactionKey){
+            if (transactionPool.count(transactionKey) == 0)
+                return false;
+            return true;
         }
 };
 

@@ -4,6 +4,8 @@
 #include <queue>
 #include <algorithm>
 #include <stdlib.h>
+#include <set>
+
 #include "globals.hpp"
 #include "blockchain.hpp"
 #include "users.hpp"
@@ -20,11 +22,14 @@ int main()
         u.createNewUser("name"+std::to_string(i), "public_key"+std::to_string(i), rand()%10 + 40);
     std::cout << "Users created." << std::endl;
     std::cout << "Creating transactions..." << std::endl;
-    for (int i = 0; i < TRANSACTION_COUNT; i++){
+    while (tp.size() < TRANSACTION_COUNT){
         std::string pk1 = u.getPublicKey(rand()%USER_COUNT);
         std::string pk2 = u.getPublicKey(rand()%USER_COUNT);
         tp.addNewTransaction(pk1, rand()%10 + 1, pk2, 0);
     }
+
+    
+    std::cout << tp.getRandomTransaction().getTransactionString() << std::endl;
     std::cout << "Transaction created." << std::endl;
     std::string trackedPK = "public_key0";
     std::cout << "Current balance(" << trackedPK << "): " <<  u.getUser(trackedPK).getBalance() << std::endl;
@@ -40,6 +45,7 @@ int main()
             std::cout << "Merkle root hash:    " << b.getMerkleRootHash() << std::endl;
             std::cout << "Nonce:               " << b.getNonce() << std::endl;
             std::cout << "Timestamp:           " << b.getTimeStamp() << std::endl;
+            std::cout << "Pool size:           " << tp.size() << std::endl;
             std::cout << "Current balance(" << trackedPK << "): " <<  u.getUser(trackedPK).getBalance() << std::endl;
             std::cout << "Sent transactions: " << std::endl;
             for (Transaction t : b.getTransactions())

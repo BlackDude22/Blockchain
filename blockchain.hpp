@@ -48,6 +48,8 @@ public:
 			return false;
 		if (!checkTransactionValidity(block.getTransactions()))
 			return false;
+		if (!checkIfTransactionExists(block.getTransactions()))
+			return false;
 		block.setTimeStamp();
 		blockChain.push_back(block);
         commitTransactions(block.getTransactions());
@@ -68,8 +70,17 @@ private:
         return true;
     }
 
+    bool checkIfTransactionExists(std::vector<Transaction> transactions){
+    	TransactionPool& tp = TransactionPool::getInstance();
+    	for (Transaction t : transactions)
+    		if (!tp.contains(t.getHash()))
+    			return false;
+    	return true;
+    }
+
     void commitTransactions(std::vector<Transaction> transactions){
     	Users& u = Users::getInstance();
+    	TransactionPool& tp = TransactionPool::getInstance();
     	for (Transaction t : transactions){
     		std::string spk = t.getSenderPublicKey();
             std::string rpk = t.getRecieverPublicKey();
@@ -79,6 +90,7 @@ private:
             u.changeBalance(t.getSenderPublicKey(), t.getOutput());
             u.changeBalance(t.getRecieverPublicKey(), t.getInput());
             u.changeBalance(t.getRecieverPublicKey(), -t.getOutput());
+            tp.removeTransaction(t.getHash());
     	}
     }
 };

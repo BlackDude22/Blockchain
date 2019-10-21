@@ -22,16 +22,14 @@ class Transaction{
             senderPublicKey = spk;
             output = out;
             recieverPublicKey = rpk;
-            std::stringstream transactionStream;
             std::time_t ticks = std::time(nullptr);
             timeStamp = std::asctime(std::localtime(&ticks));
-            transactionStream << "_" << spk << "_" << in << "_" << rpk << "_" << out << "_" << ticks;
-            transactionString = transactionStream.str();
-            transactionHash = tylek8137::getHash(transactionString);
+            transactionString = getTransactionString();
+            transactionHash = getHash();
         }
         
         std::string getHash(){
-            return transactionHash;
+            return tylek8137::getHash(getTransactionString());
         }
 
         std::string getSenderPublicKey(){
@@ -55,7 +53,9 @@ class Transaction{
         }
 
         std::string getTransactionString(){
-            return transactionString;
+            std::stringstream transactionStream;
+            transactionStream << "_" << senderPublicKey << "_" << input << "_" << recieverPublicKey << "_" << output << "_" << ticks;
+            return transactionStream.str();
         }
         
         bool operator>(Transaction right){
@@ -64,6 +64,10 @@ class Transaction{
         
         bool operator<(Transaction right){
             return !tylek8137::compareHash(transactionHash, right.transactionHash);
+        }
+
+        bool operator==(Transaction right){
+            return transactionHash == right.transactionHash;
         }
 };
 

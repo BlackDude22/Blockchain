@@ -69,3 +69,13 @@ Vartotojo profilį sudaro:
 * `Balance`. 
 
 Vartotojų balansas keičiamas tada, kai patvirtinama transakcija.
+
+# `v0.2`
+
+## Transakcijų baseinas
+
+Transakcijos laikomos nebe FIFO sąraše, o map'e. Yra galimybė pasiimti atsitiktinę transakciją iš transakcijų baseino. Paimama transakcijos kopija.
+
+## Blokų kasyba
+
+Realizuota lygiagreti blokų kasyba, naudojant OpenMP. Blokai kasami tol, kol iškasamas blokas arba pasikeičia blokų grandinės paskutinio bloko hash.

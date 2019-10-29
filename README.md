@@ -2,6 +2,8 @@
 
 Šioje repozitorijoje realizuota blokų grandinė.
 
+# `v0.1`
+
 ## Struktūra
 
 ### Blokų grandinė

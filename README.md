@@ -1,5 +1,5 @@
 # Blockchain
-
+AAAAAA
 Šioje repozitorijoje realizuota blokų grandinė.
 
 # `v0.1`
